@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import GoogleButton from "./GoogleButton";
 
@@ -13,6 +13,25 @@ export default function AuthForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const configured = isSupabaseConfigured();
+
+  if (!configured) {
+    return (
+      <div className="w-full max-w-md mx-auto">
+        <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+          <h2 className="text-xl font-bold text-dark-text mb-3">Setup Required</h2>
+          <p className="text-gray-500 text-sm">
+            Supabase environment variables are not configured yet. Add{" "}
+            <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">NEXT_PUBLIC_SUPABASE_URL</code>{" "}
+            and{" "}
+            <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>{" "}
+            to your Vercel environment variables, then redeploy.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
