@@ -56,10 +56,10 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
 
   if (items.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h2 className="text-base sm:text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
           <span className="relative z-10">Pre-Event Checklist</span>
-          <span className="absolute bottom-0 left-0 h-2 w-44 bg-cyan/20 -z-0" />
+          <span className="absolute bottom-0 left-0 h-2 w-36 sm:w-44 bg-cyan/20 -z-0" />
         </h2>
         <p className="text-gray-400 text-sm">No checklist items yet.</p>
       </div>
@@ -67,15 +67,15 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h2 className="text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <h2 className="text-base sm:text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
         <span className="relative z-10">Pre-Event Checklist</span>
-        <span className="absolute bottom-0 left-0 h-2 w-44 bg-cyan/20 -z-0" />
+        <span className="absolute bottom-0 left-0 h-2 w-36 sm:w-44 bg-cyan/20 -z-0" />
       </h2>
 
       {/* Progress bar */}
       <div className="mb-4">
-        <div className="flex justify-between text-sm mb-1">
+        <div className="flex justify-between text-xs sm:text-sm mb-1">
           <span className="text-gray-500">
             {completedCount} of {items.length} completed
           </span>
@@ -94,7 +94,7 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
         {items.map((item) => (
           <li
             key={item.id}
-            className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-start gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <button
               onClick={() => toggleItem(item.id)}
@@ -113,7 +113,7 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
             </button>
             <div>
               <p
-                className={`font-medium text-dark-text ${
+                className={`text-sm sm:text-base font-medium text-dark-text ${
                   completedMap[item.id] ? "line-through text-gray-400" : ""
                 }`}
               >

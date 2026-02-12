@@ -23,10 +23,10 @@ function getIcon(fileType: string | null) {
 export default function EventFiles({ files }: { files: EventFile[] }) {
   if (files.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+        <h2 className="text-base sm:text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
           <span className="relative z-10">Event Files</span>
-          <span className="absolute bottom-0 left-0 h-2 w-28 bg-cyan/20 -z-0" />
+          <span className="absolute bottom-0 left-0 h-2 w-24 sm:w-28 bg-cyan/20 -z-0" />
         </h2>
         <p className="text-gray-400 text-sm">No files uploaded yet.</p>
       </div>
@@ -34,10 +34,10 @@ export default function EventFiles({ files }: { files: EventFile[] }) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h2 className="text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      <h2 className="text-base sm:text-lg font-bold text-dark-text uppercase tracking-wider mb-4 relative">
         <span className="relative z-10">Event Files</span>
-        <span className="absolute bottom-0 left-0 h-2 w-28 bg-cyan/20 -z-0" />
+        <span className="absolute bottom-0 left-0 h-2 w-24 sm:w-28 bg-cyan/20 -z-0" />
       </h2>
 
       <ul className="space-y-2">

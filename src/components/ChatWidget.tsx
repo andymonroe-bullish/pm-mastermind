@@ -96,7 +96,7 @@ export default function ChatWidget({ initialMessages }: Props) {
       {/* Chat toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-cyan text-white rounded-full shadow-lg hover:bg-cyan-hover transition-all flex items-center justify-center z-50"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-cyan text-white rounded-full shadow-lg hover:bg-cyan-hover transition-all flex items-center justify-center z-50"
       >
         {isOpen ? (
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,9 +111,9 @@ export default function ChatWidget({ initialMessages }: Props) {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-2rem)] h-[500px] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col z-50">
+        <div className="fixed bottom-20 right-3 left-3 sm:left-auto sm:bottom-24 sm:right-6 sm:w-96 h-[60vh] sm:h-[500px] bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col z-50">
           {/* Header */}
-          <div className="bg-dark-navy text-white px-4 py-3 rounded-t-xl flex items-center justify-between">
+          <div className="bg-dark-navy text-white px-3 py-2.5 sm:px-4 sm:py-3 rounded-t-xl flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-sm">Event Assistant</h3>
               <p className="text-xs text-gray-400">Ask anything about the event</p>
@@ -121,7 +121,7 @@ export default function ChatWidget({ initialMessages }: Props) {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
             {messages.length === 0 && (
               <div className="text-center text-gray-400 text-sm mt-8">
                 <p>Hi! I&apos;m your event assistant.</p>
@@ -155,7 +155,7 @@ export default function ChatWidget({ initialMessages }: Props) {
           </div>
 
           {/* Input */}
-          <form onSubmit={sendMessage} className="p-3 border-t border-gray-100">
+          <form onSubmit={sendMessage} className="p-2 sm:p-3 border-t border-gray-100">
             <div className="flex gap-2">
               <input
                 type="text"
