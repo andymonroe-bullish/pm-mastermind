@@ -61,35 +61,24 @@ export default function AdminEventInfoPage() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">Date</label>
-            <input
-              type="date"
-              value={event.event_date || ""}
-              onChange={(e) => setEvent({ ...event, event_date: e.target.value })}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-dark-text"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-dark-text mb-1">Time</label>
-            <input
-              type="text"
-              value={event.event_time || ""}
-              onChange={(e) => setEvent({ ...event, event_time: e.target.value })}
-              placeholder="e.g., 9:00 AM - 5:00 PM"
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-dark-text"
-            />
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-dark-text mb-1">Dates</label>
+          <input
+            type="text"
+            value={event.event_date || ""}
+            onChange={(e) => setEvent({ ...event, event_date: e.target.value })}
+            placeholder="e.g., April 16th - 19th, 2026"
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-dark-text"
+          />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-dark-text mb-1">Venue Name</label>
+          <label className="block text-sm font-medium text-dark-text mb-1">Closest Airport</label>
           <input
             type="text"
             value={event.venue_name || ""}
             onChange={(e) => setEvent({ ...event, venue_name: e.target.value })}
-            placeholder="e.g., The Grand Ballroom"
+            placeholder="e.g., Phoenix Sky Harbor (PHX)"
             className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan text-dark-text"
           />
         </div>
