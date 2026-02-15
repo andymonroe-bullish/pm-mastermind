@@ -122,7 +122,8 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
               >
                 {item.title}
               </p>
-              {item.title.toLowerCase().includes("onboarding call") && (
+              {(item.title.toLowerCase().includes("onboarding call") ||
+                item.title.toLowerCase().includes("book your")) && (
                 <p className="text-sm mt-0.5">
                   <a
                     href="https://www.bullishevents.com/pm-mastermind-event"
