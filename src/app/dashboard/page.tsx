@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/Header";
+import EventCountdown from "@/components/EventCountdown";
 import DashboardTabs from "@/components/DashboardTabs";
 import ChatWidget from "@/components/ChatWidget";
 import type { Profile, EventInfo, ChecklistItem, ChecklistProgress, EventFile, ChatMessage } from "@/lib/types";
@@ -52,6 +53,8 @@ export default async function DashboardPage() {
             Here&apos;s everything you need for {event?.title || "the event"}.
           </p>
         </div>
+
+        <EventCountdown />
 
         <DashboardTabs
           event={event}
