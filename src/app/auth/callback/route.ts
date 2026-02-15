@@ -6,8 +6,13 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
 
   if (code) {
-    const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    try {
+      const supabase = await createClient();
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error) throw error;
+    } catch {
+      return NextResponse.redirect(`${origin}/?error=auth_callback_failed`);
+    }
   }
 
   return NextResponse.redirect(`${origin}/dashboard`);

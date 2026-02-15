@@ -9,7 +9,11 @@ export default function Header({ profile }: { profile: Profile }) {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // Best-effort logout — redirect regardless
+    }
     router.push("/");
     router.refresh();
   };

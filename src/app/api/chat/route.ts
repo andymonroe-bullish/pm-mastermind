@@ -4,6 +4,26 @@ import { createClient } from "@/lib/supabase/server";
 
 const anthropic = new Anthropic();
 
+// Simple in-memory rate limiter: max 10 messages per minute per user
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT_WINDOW = 60_000;
+const RATE_LIMIT_MAX = 10;
+const MAX_MESSAGE_LENGTH = 2000;
+
+function isRateLimited(userId: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(userId) || []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW
+  );
+  if (timestamps.length >= RATE_LIMIT_MAX) {
+    rateLimitMap.set(userId, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(userId, timestamps);
+  return false;
+}
+
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const {
@@ -14,7 +34,26 @@ export async function POST(request: NextRequest) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const { message } = await request.json();
+  if (isRateLimited(user.id)) {
+    return new Response("Too many messages. Please wait a moment.", { status: 429 });
+  }
+
+  let body: { message?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return new Response("Invalid request body", { status: 400 });
+  }
+
+  const { message } = body;
+
+  if (!message || typeof message !== "string") {
+    return new Response("Message is required", { status: 400 });
+  }
+
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    return new Response(`Message too long (max ${MAX_MESSAGE_LENGTH} characters)`, { status: 400 });
+  }
 
   // Fetch event context for the system prompt
   const [eventRes, itineraryRes, checklistRes] = await Promise.all([

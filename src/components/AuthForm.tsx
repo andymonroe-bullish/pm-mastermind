@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import GoogleButton from "./GoogleButton";
 
 export default function AuthForm() {
@@ -13,7 +13,14 @@ export default function AuthForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const configured = isSupabaseConfigured();
+
+  useEffect(() => {
+    if (searchParams.get("error") === "auth_callback_failed") {
+      setError("Sign in failed. Please try again.");
+    }
+  }, [searchParams]);
 
   if (!configured) {
     return (
