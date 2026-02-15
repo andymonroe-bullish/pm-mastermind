@@ -33,20 +33,23 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
 
     try {
       if (wasCompleted) {
-        await supabase
+        const { error } = await supabase
           .from("checklist_progress")
           .delete()
           .eq("user_id", userId)
           .eq("item_id", itemId);
+        if (error) throw error;
       } else {
-        await supabase.from("checklist_progress").upsert({
+        const { error } = await supabase.from("checklist_progress").upsert({
           user_id: userId,
           item_id: itemId,
           completed: true,
           completed_at: new Date().toISOString(),
         });
+        if (error) throw error;
       }
-    } catch {
+    } catch (err) {
+      console.error("Checklist toggle failed:", err);
       // Revert on error
       setCompletedMap((prev) => ({ ...prev, [itemId]: wasCompleted }));
     } finally {
@@ -119,6 +122,18 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
               >
                 {item.title}
               </p>
+              {item.title.toLowerCase().includes("onboarding call") && (
+                <p className="text-sm mt-0.5">
+                  <a
+                    href="https://www.bullishevents.com/pm-mastermind-event"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan hover:underline"
+                  >
+                    Book your call here
+                  </a>
+                </p>
+              )}
               {item.description && (
                 <p className="text-sm text-gray-500 mt-0.5">{item.description}</p>
               )}

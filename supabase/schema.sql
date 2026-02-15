@@ -105,14 +105,22 @@ alter table itinerary_items enable row level security;
 alter table event_files enable row level security;
 alter table chat_messages enable row level security;
 
+-- Helper function to check admin role without triggering RLS recursion.
+-- SECURITY DEFINER runs as the DB owner, bypassing RLS on the profiles table.
+create or replace function public.is_admin()
+returns boolean as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin'
+  );
+$$ language sql security definer stable;
+
 -- Profiles: users can read own profile, admins can read all
 create policy "Users can read own profile"
   on profiles for select using (auth.uid() = id);
 
 create policy "Admins can read all profiles"
-  on profiles for select using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on profiles for select using (public.is_admin());
 
 create policy "Users can update own profile"
   on profiles for update using (auth.uid() = id);
@@ -122,28 +130,20 @@ create policy "Authenticated users can read event info"
   on event_info for select using (auth.role() = 'authenticated');
 
 create policy "Admins can update event info"
-  on event_info for update using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on event_info for update using (public.is_admin());
 
 -- Checklist items: anyone authenticated can read, admins can manage
 create policy "Authenticated users can read checklist items"
   on checklist_items for select using (auth.role() = 'authenticated');
 
 create policy "Admins can insert checklist items"
-  on checklist_items for insert with check (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on checklist_items for insert with check (public.is_admin());
 
 create policy "Admins can update checklist items"
-  on checklist_items for update using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on checklist_items for update using (public.is_admin());
 
 create policy "Admins can delete checklist items"
-  on checklist_items for delete using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on checklist_items for delete using (public.is_admin());
 
 -- Checklist progress: users manage own, admins can read all
 create policy "Users can read own checklist progress"
@@ -155,43 +155,34 @@ create policy "Users can insert own checklist progress"
 create policy "Users can update own checklist progress"
   on checklist_progress for update using (auth.uid() = user_id);
 
+create policy "Users can delete own checklist progress"
+  on checklist_progress for delete using (auth.uid() = user_id);
+
 create policy "Admins can read all checklist progress"
-  on checklist_progress for select using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on checklist_progress for select using (public.is_admin());
 
 -- Itinerary: anyone authenticated can read, admins can manage
 create policy "Authenticated users can read itinerary"
   on itinerary_items for select using (auth.role() = 'authenticated');
 
 create policy "Admins can insert itinerary items"
-  on itinerary_items for insert with check (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on itinerary_items for insert with check (public.is_admin());
 
 create policy "Admins can update itinerary items"
-  on itinerary_items for update using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on itinerary_items for update using (public.is_admin());
 
 create policy "Admins can delete itinerary items"
-  on itinerary_items for delete using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on itinerary_items for delete using (public.is_admin());
 
 -- Event files: anyone authenticated can read, admins can manage
 create policy "Authenticated users can read event files"
   on event_files for select using (auth.role() = 'authenticated');
 
 create policy "Admins can insert event files"
-  on event_files for insert with check (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on event_files for insert with check (public.is_admin());
 
 create policy "Admins can delete event files"
-  on event_files for delete using (
-    exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  on event_files for delete using (public.is_admin());
 
 -- Chat messages: users can manage own messages
 create policy "Users can read own chat messages"
@@ -213,14 +204,8 @@ create policy "Authenticated users can read event files storage"
 
 create policy "Admins can upload event files"
   on storage.objects for insert
-  with check (
-    bucket_id = 'event-files'
-    and exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  with check (bucket_id = 'event-files' and public.is_admin());
 
 create policy "Admins can delete event files storage"
   on storage.objects for delete
-  using (
-    bucket_id = 'event-files'
-    and exists (select 1 from profiles where id = auth.uid() and role = 'admin')
-  );
+  using (bucket_id = 'event-files' and public.is_admin());
