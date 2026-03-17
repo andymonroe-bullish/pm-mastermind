@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import GoogleButton from "./GoogleButton";
-
 export default function AuthForm() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
@@ -78,17 +76,6 @@ export default function AuthForm() {
         <h2 className="text-2xl font-bold text-dark-text text-center mb-6">
           {isSignUp ? "Create Account" : "Welcome Back"}
         </h2>
-
-        <GoogleButton />
-
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-gray-400">or</span>
-          </div>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
