@@ -135,6 +135,18 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
                   </a>
                 </p>
               )}
+              {item.title.toLowerCase().includes("whatsapp") && (
+                <p className="text-sm mt-0.5">
+                  <a
+                    href="https://chat.whatsapp.com/KAzJQWvqqn46WAG8kmgy5W?mode=hqcthdi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan hover:underline"
+                  >
+                    Join the WhatsApp chat here
+                  </a>
+                </p>
+              )}
               {item.description && (
                 <p className="text-sm text-gray-500 mt-0.5">{item.description}</p>
               )}
