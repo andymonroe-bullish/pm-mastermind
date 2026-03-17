@@ -126,7 +126,7 @@ export default function DashboardChecklist({ items, progress, userId }: Props) {
                 item.title.toLowerCase().includes("book your")) && (
                 <p className="text-sm mt-0.5">
                   <a
-                    href="https://www.bullishevents.com/pm-mastermind-event"
+                    href="https://api.leadconnectorhq.com/widget/booking/EGbiVwL4TEsFUlKdPuMM"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-cyan hover:underline"
