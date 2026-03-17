@@ -4,9 +4,36 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { ItineraryItem } from "@/lib/types";
 
+const DEFAULT_SCHEDULE = [
+  { date: "2026-04-16", start_time: "6:30 PM", end_time: null, title: "Welcome Dinner", sort_order: 0 },
+  { date: "2026-04-16", start_time: "8:00 PM", end_time: null, title: "Opening Session + Hangout", sort_order: 1 },
+  { date: "2026-04-17", start_time: "8:00 AM", end_time: null, title: "Breakfast & Coffee", sort_order: 2 },
+  { date: "2026-04-17", start_time: "9:00 AM", end_time: "11:00 AM", title: "Session 1", sort_order: 3 },
+  { date: "2026-04-17", start_time: "11:00 AM", end_time: "11:15 AM", title: "Break", sort_order: 4 },
+  { date: "2026-04-17", start_time: "11:15 AM", end_time: "12:00 PM", title: "Session 2", sort_order: 5 },
+  { date: "2026-04-17", start_time: "12:00 PM", end_time: "1:30 PM", title: "Lunch", sort_order: 6 },
+  { date: "2026-04-17", start_time: "1:30 PM", end_time: "3:30 PM", title: "Session 3", sort_order: 7 },
+  { date: "2026-04-17", start_time: "3:30 PM", end_time: "3:45 PM", title: "Break", sort_order: 8 },
+  { date: "2026-04-17", start_time: "3:45 PM", end_time: "5:00 PM", title: "Live Build", sort_order: 9 },
+  { date: "2026-04-17", start_time: "5:00 PM", end_time: "6:00 PM", title: "Personal Time / Enjoy the Airbnb", sort_order: 10 },
+  { date: "2026-04-17", start_time: "6:00 PM", end_time: "7:30 PM", title: "Dinner", sort_order: 11 },
+  { date: "2026-04-17", start_time: "7:30 PM", end_time: "9:00 PM", title: "Activities", sort_order: 12 },
+  { date: "2026-04-18", start_time: "8:00 AM", end_time: "9:00 AM", title: "Breakfast", sort_order: 13 },
+  { date: "2026-04-18", start_time: "9:00 AM", end_time: "12:30 PM", title: "Excursion / Activity", sort_order: 14 },
+  { date: "2026-04-18", start_time: "12:30 PM", end_time: "2:00 PM", title: "Lunch", sort_order: 15 },
+  { date: "2026-04-18", start_time: "2:00 PM", end_time: "4:00 PM", title: "Session", sort_order: 16 },
+  { date: "2026-04-18", start_time: "4:00 PM", end_time: "4:15 PM", title: "Break", sort_order: 17 },
+  { date: "2026-04-18", start_time: "4:15 PM", end_time: "5:00 PM", title: "Session", sort_order: 18 },
+  { date: "2026-04-18", start_time: "5:00 PM", end_time: "5:45 PM", title: "Personal Reflection / Closing Session", sort_order: 19 },
+  { date: "2026-04-18", start_time: "6:00 PM", end_time: "7:30 PM", title: "Dinner", sort_order: 20 },
+  { date: "2026-04-18", start_time: "7:30 PM", end_time: "9:00 PM", title: "Party", sort_order: 21 },
+  { date: "2026-04-19", start_time: "9:00 AM", end_time: null, title: "Breakfast / Event End", sort_order: 22 },
+];
+
 export default function AdminItineraryPage() {
   const supabase = createClient();
   const [items, setItems] = useState<ItineraryItem[]>([]);
+  const [seeding, setSeeding] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newForm, setNewForm] = useState({
     title: "",
@@ -35,6 +62,13 @@ export default function AdminItineraryPage() {
       .order("sort_order")
       .order("start_time");
     if (data) setItems(data as ItineraryItem[]);
+  };
+
+  const seedDefaultSchedule = async () => {
+    setSeeding(true);
+    await supabase.from("itinerary_items").insert(DEFAULT_SCHEDULE);
+    await loadItems();
+    setSeeding(false);
   };
 
   const addItem = async () => {
@@ -196,7 +230,16 @@ export default function AdminItineraryPage() {
         </h2>
 
         {items.length === 0 ? (
-          <p className="text-gray-400 text-sm">No itinerary items yet.</p>
+          <div className="space-y-3">
+            <p className="text-gray-400 text-sm">No itinerary items yet.</p>
+            <button
+              onClick={seedDefaultSchedule}
+              disabled={seeding}
+              className="bg-cyan text-white font-semibold px-5 py-2 rounded-lg uppercase tracking-wider text-sm hover:bg-cyan-hover transition-colors disabled:opacity-50"
+            >
+              {seeding ? "Importing..." : "Import Default Schedule"}
+            </button>
+          </div>
         ) : (
           <ul className="space-y-2">
             {items.map((item, index) => (
