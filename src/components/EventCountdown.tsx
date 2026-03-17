@@ -37,7 +37,7 @@ export default function EventCountdown() {
         </div>
         <div className="text-right text-sm sm:text-base text-gray-500">
           <p className="font-medium text-dark-text">April 16 - 19, 2026</p>
-          <p>Phoenix, AZ</p>
+          <p>Sedona, AZ</p>
         </div>
       </div>
     </div>
