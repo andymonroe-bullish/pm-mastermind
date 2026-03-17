@@ -3,8 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import Header from "@/components/Header";
 import EventCountdown from "@/components/EventCountdown";
 import DashboardTabs from "@/components/DashboardTabs";
-import ChatWidget from "@/components/ChatWidget";
-import type { Profile, EventInfo, ChecklistItem, ChecklistProgress, EventFile, ChatMessage } from "@/lib/types";
+import type { Profile, EventInfo, ChecklistItem, ChecklistProgress, EventFile } from "@/lib/types";
 
 
 export default async function DashboardPage() {
@@ -16,14 +15,13 @@ export default async function DashboardPage() {
   if (!user) redirect("/");
 
   // Fetch all data in parallel
-  const [profileRes, eventRes, checklistRes, progressRes, filesRes, chatRes] =
+  const [profileRes, eventRes, checklistRes, progressRes, filesRes] =
     await Promise.all([
       supabase.from("profiles").select("*").eq("id", user.id).single(),
       supabase.from("event_info").select("*").limit(1).single(),
       supabase.from("checklist_items").select("*").order("sort_order"),
       supabase.from("checklist_progress").select("*").eq("user_id", user.id),
       supabase.from("event_files").select("*").order("uploaded_at", { ascending: false }),
-      supabase.from("chat_messages").select("*").eq("user_id", user.id).order("created_at"),
     ]);
 
   const profile = (profileRes.data as Profile | null) ?? {
@@ -37,7 +35,6 @@ export default async function DashboardPage() {
   const checklistItems = (checklistRes.data || []) as ChecklistItem[];
   const checklistProgress = (progressRes.data || []) as ChecklistProgress[];
   const files = (filesRes.data || []) as EventFile[];
-  const chatHistory = (chatRes.data || []) as ChatMessage[];
 
   return (
     <div className="min-h-screen bg-light-card">
@@ -65,7 +62,7 @@ export default async function DashboardPage() {
         />
       </main>
 
-      <ChatWidget userId={user.id} initialMessages={chatHistory} />
+
     </div>
   );
 }
